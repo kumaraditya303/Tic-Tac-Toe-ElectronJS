@@ -1,16 +1,11 @@
-const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const ForkTsWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 module.exports = {
+  entry: "./src/index.ts",
   module: {
     rules: [
       {
         test: /\.node$/,
         use: "node-loader",
-      },
-      {
-        test: /\.css$/,
-        use: [MiniCssExtractPlugin.loader, { loader: "css-loader" }],
       },
       {
         test: /\.(m?js|node)$/,
@@ -34,12 +29,8 @@ module.exports = {
       },
     ],
   },
-  plugins: [new ForkTsCheckerWebpackPlugin(), new MiniCssExtractPlugin()],
-  optimization: {
-    minimize: true,
-    minimizer: [new CssMinimizerPlugin()],
-  },
+  plugins: [new ForkTsWebpackPlugin()],
   resolve: {
-    extensions: [".js", ".ts", ".jsx", ".tsx", ".css"],
+    extensions: [".js", ".ts", ".jsx", ".tsx", ".css", ".json"],
   },
 };

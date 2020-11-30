@@ -22,7 +22,6 @@
   transition: all 0.5s;
 }
 .navbar .title {
-  font-weight: bolder;
   padding: 5px;
 }
 .navbar .close-btn {
@@ -46,7 +45,7 @@
   max-width: 300px;
   max-height: 300px;
 }
-.container > button {
+.container > .btn {
   position: relative;
   height: 100px;
   width: 100px;
@@ -58,11 +57,27 @@
   border-radius: 0.5rem;
   cursor: pointer;
 }
-.container > button:hover {
-  background-color: #505252;
+.container > .btn-disabled {
+  position: relative;
+  height: 100px;
+  width: 100px;
+  border: 2px solid #353636;
+  background-color: #0f0f0f;
+  font-size: 75px;
+  transition: all 0.5s;
+  color: white;
+  border-radius: 0.5rem;
 }
 
-.container > button:focus {
+.container > .btn-disabled:focus {
+  outline: none;
+}
+.container > .btn:hover {
+  background-color: #505252;
+  transform: scale(1.08);
+}
+
+.container > .btn:focus {
   outline: none;
 }
 
@@ -88,4 +103,17 @@
 
 .reset-btn:focus {
   outline: none;
+}
+.MuiPaper-root {
+  background: #0f0f0f !important;
+  color: white !important;
+  font-weight: bolder;
+  border: 2px solid white;
+  border-radius: 0.5rem !important;
+}
+.MuiTypography-root {
+  color: white !important;
+}
+span {
+  color: white !important;
 }

@@ -1,11 +1,23 @@
-import * as React from "react";
-import "./App.css";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  makeStyles,
+} from "@material-ui/core";
 import { remote } from "electron";
+import * as React from "react";
+import { hot } from "react-hot-loader";
+import "./App.css";
 interface IState {
   values: boolean[];
   current: boolean;
   winnerX: number;
   winnerO: number;
+  open: boolean;
+  winner?: "X" | "O";
 }
 
 class App extends React.Component<{}, IState> {
@@ -14,6 +26,7 @@ class App extends React.Component<{}, IState> {
     current: true,
     winnerX: 0,
     winnerO: 0,
+    open: false,
   };
 
   private calculateWinner() {
@@ -41,8 +54,12 @@ class App extends React.Component<{}, IState> {
         } else {
           this.setState((state) => ({ winnerO: state.winnerO + 1 }));
         }
-        alert(`Player ${winner} Won!`);
-        this.setState({ values: Array(9).fill(null), current: true });
+        this.setState({
+          values: Array(9).fill(null),
+          current: true,
+          open: true,
+          winner,
+        });
       }
     }
   }
@@ -66,17 +83,20 @@ class App extends React.Component<{}, IState> {
         <div className="container">
           {this.state.values.map((value, index) => (
             <button
+              className={value === null ? "btn" : "btn-disabled"}
               key={index}
               onClick={() => {
                 const values = this.state.values.slice();
-                values[index] = value === null ? this.state.current : !value;
-                this.setState(
-                  (state) => ({
-                    values: values,
-                    current: !state.current,
-                  }),
-                  () => this.calculateWinner()
-                );
+                if (value === null) {
+                  values[index] = this.state.current;
+                  this.setState(
+                    (state) => ({
+                      values: values,
+                      current: !state.current,
+                    }),
+                    () => this.calculateWinner()
+                  );
+                }
               }}
             >
               {value !== null ? (value ? "X" : "O") : "?"}
@@ -91,8 +111,28 @@ class App extends React.Component<{}, IState> {
         >
           Reset
         </button>
+        <Dialog
+          open={this.state.open}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">{"Winner🎉"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              {`Player ${this.state.winner} Won`}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              variant="text"
+              onClick={() => this.setState({ open: false })}
+            >
+              Ok
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
     );
   }
 }
-export default App;
+export default hot(module)(App);
