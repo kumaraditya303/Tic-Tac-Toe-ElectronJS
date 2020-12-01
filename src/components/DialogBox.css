@@ -1,0 +1,13 @@
+.MuiPaper-root {
+  background: #0f0f0f !important;
+  color: white !important;
+  font-weight: bolder;
+  border: 2px solid white;
+  border-radius: 0.5rem !important;
+}
+.MuiTypography-root {
+  color: white !important;
+}
+span {
+  color: white !important;
+}

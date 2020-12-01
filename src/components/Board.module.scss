@@ -1,0 +1,101 @@
+.board {
+  display: grid;
+  justify-content: center;
+  align-content: center;
+  color: white;
+  user-select: none;
+  &__players {
+    display: flex;
+    padding: 5px;
+    justify-content: space-between;
+    font-weight: bolder;
+    margin-bottom: 5px;
+    cursor: default;
+    border-bottom: 1px solid white;
+  }
+
+  .container {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 300px;
+    max-height: 300px;
+    .btn {
+      position: relative;
+      height: 100px;
+      width: 100px;
+      border: 2px solid #353636;
+      background-color: #0f0f0f;
+      font-size: 75px;
+      transition: all 0.5s;
+      color: white;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      &:hover {
+        background-color: #505252;
+        transform: scale(1.08);
+      }
+      &:focus {
+        outline: none;
+      }
+      &--disabled {
+        cursor: default;
+        &:hover {
+          background-color: #0f0f0f;
+          transform: none;
+        }
+        &:focus {
+          outline: none;
+        }
+      }
+    }
+  }
+
+  .reset__btn {
+    margin: 0 auto;
+    margin-top: 10px;
+    height: 40px;
+    width: 100px;
+    background: transparent;
+    color: white;
+    border: 2px solid white;
+    border-radius: 0.5rem;
+    transition: all 0.5s;
+    font-size: large;
+    font-weight: bolder;
+    cursor: pointer;
+    &:hover {
+      background-color: #646464;
+      transform: scale(1.08);
+    }
+    &:focus {
+      outline: none;
+    }
+  }
+}
+
+.navbar {
+  display: flex;
+  height: 30px;
+  justify-content: space-between;
+  transition: all 0.5s;
+  &__title {
+    padding: 5px;
+  }
+  &__btn {
+    height: 30px;
+    font-weight: 900;
+    background: transparent;
+    border: none;
+    color: white;
+    width: 30px;
+    &:hover {
+      background: red;
+    }
+    &:focus {
+      outline: none;
+    }
+  }
+}
+
+

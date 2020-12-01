@@ -1,7 +1,12 @@
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 module.exports = {
+  output: {
+    filename: "[name].[hash].js",
+  },
+
   module: {
     rules: [
       {
@@ -9,8 +14,30 @@ module.exports = {
         use: "node-loader",
       },
       {
-        test: /\.css$/,
-        use: [MiniCssExtractPlugin.loader, { loader: "css-loader" }],
+        test: /\.(scss|css)$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          {
+            loader: "css-loader?sourceMap",
+            options: {
+              importLoaders: true,
+              modules: true,
+            },
+          },
+          { loader: "sass-loader?sourceMap" },
+        ],
+        include: /\.module.(scss|css)$/,
+      },
+      {
+        test: /\.(scss|css)$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          {
+            loader: "css-loader?sourceMap",
+          },
+          { loader: "sass-loader?sourceMap" },
+        ],
+        exclude: /\.module.(scss|css)$/,
       },
       {
         test: /\.(m?js|node)$/,
@@ -37,9 +64,9 @@ module.exports = {
   plugins: [new ForkTsCheckerWebpackPlugin(), new MiniCssExtractPlugin()],
   optimization: {
     minimize: true,
-    minimizer: [new CssMinimizerPlugin()],
+    minimizer: [new CssMinimizerPlugin(), new TerserPlugin()],
   },
   resolve: {
-    extensions: [".js", ".ts", ".jsx", ".tsx", ".css"],
+    extensions: [".js", ".ts", ".jsx", ".tsx", ".css", ".scss"],
   },
 };

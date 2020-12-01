@@ -1,16 +1,9 @@
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  makeStyles,
-} from "@material-ui/core";
+import classname from "classnames";
 import { remote } from "electron";
 import * as React from "react";
 import { hot } from "react-hot-loader";
-import "./App.css";
+import styles from "./Board.module.scss";
+import DialogBox from "./DialogBox";
 interface IState {
   values: boolean[];
   current: boolean;
@@ -18,9 +11,10 @@ interface IState {
   winnerO: number;
   open: boolean;
   winner?: "X" | "O";
+  message?: string;
 }
 
-class App extends React.Component<{}, IState> {
+class Board extends React.Component<{}, IState> {
   state: IState = {
     values: Array(9).fill(null),
     current: true,
@@ -41,8 +35,9 @@ class App extends React.Component<{}, IState> {
       [0, 4, 8],
       [2, 4, 6],
     ];
-    for (let i = 0; i < lines.length; i++) {
-      const [a, b, c] = lines[i];
+
+    for (const line of lines) {
+      const [a, b, c] = line;
       if (
         values[a] !== null &&
         values[a] === values[b] &&
@@ -58,32 +53,50 @@ class App extends React.Component<{}, IState> {
           values: Array(9).fill(null),
           current: true,
           open: true,
+          message: `Player ${winner} Won`,
           winner,
         });
+        return;
       }
     }
+    if (Board.arrayEquals(values, Array(9).fill(null))) {
+      this.setState({ message: "Game Draw", open: true });
+    }
   }
-
-  render() {
+  private static arrayEquals(a: any[], b: any[]) {
     return (
-      <div className="board">
-        <div className="navbar">
-          <p className="title">Tic Tac Toe</p>
+      Array.isArray(a) &&
+      Array.isArray(b) &&
+      a.length == b.length &&
+      a.every((val, idx) => val !== b[idx])
+    );
+  }
+  public reset = () => {
+    this.setState({ values: Array(9).fill(null), current: true, open: false });
+  };
+
+  public render() {
+    return (
+      <div className={styles.board}>
+        <div className={styles.navbar}>
+          <p className={styles.navbar__title}>Tic Tac Toe</p>
           <button
-            className="close-btn"
+            className={styles.navbar__btn}
             onClick={() => remote.getCurrentWindow().close()}
           >
             &times;
           </button>
         </div>
-        <div className="players">
+        <div className={styles.board__players}>
           <p>Player X Wins: {this.state.winnerX}</p>
           <p>Player O Wins: {this.state.winnerO}</p>
         </div>
-        <div className="container">
+        <div className={styles.container}>
           {this.state.values.map((value, index) => (
             <button
-              className={value === null ? "btn" : "btn-disabled"}
+              className={classname(styles.btn, {
+                [styles["btn--disabled"]]: value !== null,
+              })}
               key={index}
               onClick={() => {
                 const values = this.state.values.slice();
@@ -103,36 +116,16 @@ class App extends React.Component<{}, IState> {
             </button>
           ))}
         </div>
-        <button
-          className="reset-btn"
-          onClick={() =>
-            this.setState({ values: Array(9).fill(null), current: true })
-          }
-        >
+        <button className={styles.reset__btn} onClick={() => this.reset()}>
           Reset
         </button>
-        <Dialog
+        <DialogBox
           open={this.state.open}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">{"Winner🎉"}</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              {`Player ${this.state.winner} Won`}
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button
-              variant="text"
-              onClick={() => this.setState({ open: false })}
-            >
-              Ok
-            </Button>
-          </DialogActions>
-        </Dialog>
+          message={this.state.message}
+          reset={this.reset}
+        />
       </div>
     );
   }
 }
-export default hot(module)(App);
+export default hot(module)(Board);
