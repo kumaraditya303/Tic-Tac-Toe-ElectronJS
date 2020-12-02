@@ -79,6 +79,7 @@
   height: 30px;
   justify-content: space-between;
   transition: all 0.5s;
+  -webkit-app-region: drag;
   &__title {
     padding: 5px;
   }
@@ -89,6 +90,7 @@
     border: none;
     color: white;
     width: 30px;
+    -webkit-app-region: no-drag;
     &:hover {
       background: red;
     }
@@ -97,5 +99,3 @@
     }
   }
 }
-
-
